@@ -11,8 +11,6 @@ import org.neuroph.samples.convolution.MNISTDataSet;
 import org.neuroph.util.TransferFunctionType;
 
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * @author bobboau
@@ -65,7 +63,6 @@ public class Main {
 			//get a trained neaural net
 			double[] learning_rate=new double[34];
 			float[] accuracy=new float[34];
-			List<NeuralNetwork<BackPropagation>> neural_net=new ArrayList<NeuralNetwork<BackPropagation>>();
 			int i;
 			for(i=0;i<9;i++) {
 				learning_rate[i]=0.001*(i+1);
@@ -74,9 +71,8 @@ public class Main {
 				learning_rate[i]=0.01*(i-8);
 			}
 			for(i=0;i<34;i++) {
-				NeuralNetwork<BackPropagation> net = train(training_set,learning_rate[i],BatchSize,MaxIterations,MaxError,BatchSizeDecayRate,BatchSizeRegenRate,LearningDecayRate,LearningRegenRate);
-				neural_net.add(net);
-				float success = evaluate(net, validation_set);
+				NeuralNetwork<BackPropagation> net = train(validation_set,learning_rate[i],BatchSize,MaxIterations,MaxError,BatchSizeDecayRate,BatchSizeRegenRate,LearningDecayRate,LearningRegenRate);
+				float success = evaluate(net, test_set);
 				System.out.println("Neural net evaluated with "+success*100+"% accuracy.");
 				accuracy[i]=success;
 			}
@@ -89,11 +85,11 @@ public class Main {
 				}
 				System.out.println("Learning rate is "+learning_rate[i]+", accuracy is "+accuracy[i]);
 			}
-
+			NeuralNetwork<BackPropagation> actualnet = train(training_set,learning_rate[maxindex],BatchSize,MaxIterations,MaxError,BatchSizeDecayRate,BatchSizeRegenRate,LearningDecayRate,LearningRegenRate);
 			System.out.println("Testing network.");
 
 			//see how well it does with the test set
-			float success = evaluate(neural_net.get(maxindex), test_set);
+			float success = evaluate(actualnet, test_set);
 
 			System.out.println("Neural net evaluated test set with "+success*100+"% accuracy.");
 		} catch (IOException e) {
@@ -109,13 +105,11 @@ public class Main {
 		backPropagation.setMaxIterations(MaxIterations);
 		backPropagation.setLearningRate(learning_rate);
 		backPropagation.setMaxError(MaxError);
-		/*
 		backPropagation.setBatchSize(BatchSize);
 		backPropagation.setBatchSizeDecayRate(BatchSizeDecayRate);
 		backPropagation.setBatchSizeRegenRate(BatchSizeRegenRate);
 		backPropagation.setLearningDecayRate(LearningDecayRate);
 		backPropagation.setLearningRegenRate(LearningRegenRate);
-		*/
 		System.out.println("Training network.");
 		neural_network.learn(training_set, backPropagation);
 		return neural_network;

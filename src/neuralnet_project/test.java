@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @author bobboau
  *
  */
-public class maintest {
+public class test {
     public static final int WEIGHT_NUM = 23860;
     /**
      * @param args
@@ -66,7 +66,7 @@ public class maintest {
             for(i=5;i<9;i++)
                 batch[i]=5*(i+1);*/
             for(i=0;i<1;i++) {
-                NeuralNetwork<BackPropagation> net = train(validation_set,0.009,0);
+                NeuralNetwork<BackPropagation> net = train(validation_set,0.004,50);
                 //neural_net.add(net);
                 float success = evaluate(net, test_set);
                 System.out.println("Neural net evaluated with "+success*100+"% accuracy.");
@@ -95,11 +95,11 @@ public class maintest {
         backPropagation.setMaxIterations(500);
         backPropagation.setLearningRate(learning_rate);
         backPropagation.setMaxError(0.01);
-		backPropagation.setBatchSize(BatchSize);
-		backPropagation.setBatchSizeDecayRate(1);
-		backPropagation.setBatchSizeRegenRate(1);
-		backPropagation.setLearningDecayRate(0.95);
-		backPropagation.setLearningRegenRate(1);
+        backPropagation.setBatchSize(BatchSize);
+        backPropagation.setBatchSizeDecayRate(1);
+        backPropagation.setBatchSizeRegenRate(1);
+        backPropagation.setLearningDecayRate(0.95);
+        backPropagation.setLearningRegenRate(1);
         System.out.println("Training network.");
         //        helperToWrite(neural_network.getWeights());
         double[] weights = helperToRead();
@@ -116,9 +116,9 @@ public class maintest {
             DataOutputStream dos = new DataOutputStream(new FileOutputStream("H:/error.txt",true));
 
             //write data line by line
-                String line = d.toString();
-                dos.write(line.getBytes());
-                dos.write('\n');
+            String line = d.toString();
+            dos.write(line.getBytes());
+            dos.write('\n');
 
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block

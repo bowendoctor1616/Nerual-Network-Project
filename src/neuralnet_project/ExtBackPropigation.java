@@ -1,5 +1,9 @@
 package neuralnet_project;
 
+import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -18,6 +22,7 @@ public class ExtBackPropigation extends BackPropagation {
 	/**
 	 *
 	 */
+	public int num=0;
 	private static final long serialVersionUID = 8446616068402387617L;
 
 	double learning_decay_rate = 0.95;
@@ -33,7 +38,8 @@ public class ExtBackPropigation extends BackPropagation {
 	double batch_size = 0;
 	public void setBatchSize(int _batch_size){
 		batch_size = _batch_size;
-		this.setBatchMode(true);
+		if(_batch_size!=0)
+			this.setBatchMode(true);
 	}
 
 	double batch_size_decay_rate = 1.0;
@@ -58,6 +64,7 @@ public class ExtBackPropigation extends BackPropagation {
 	@Override
 	protected void afterEpoch(){
 		super.afterEpoch();
+		helperToWrite(this.previousEpochError);
 		if(last_error < this.previousEpochError){
 			learningRate *= learning_decay_rate;
 			batch_size *= batch_size_decay_rate;
@@ -68,7 +75,7 @@ public class ExtBackPropigation extends BackPropagation {
 		}
 		else{
 			System.out.println("     Error decreaseing and not changed from last on epoch "+this.currentIteration+" with error: "+this.previousEpochError);
-
+			num=this.currentIteration;
 			batch_size *= batch_size_regen_rate;
 			learningRate *= learning_regen_rate;
 			if(!isInBatchMode() && batch_size >= 1){
@@ -76,6 +83,7 @@ public class ExtBackPropigation extends BackPropagation {
 			}
 		}
 		last_error = this.previousEpochError;
+
 	}
 
 	/**
@@ -98,9 +106,10 @@ public class ExtBackPropigation extends BackPropagation {
 			while (iterator.hasNext() && !isStopped()) {
 				random_ordered_set.add(iterator.next());
 			}
+			/*
 			long seed = System.nanoTime();
 			Collections.shuffle(random_ordered_set, new Random(seed));
-
+			*/
 			int count = 0;
 			for( int i = 0; i<random_ordered_set.size(); i++){
 				DataSetRow dataSetRow = random_ordered_set.get(i);
@@ -117,5 +126,22 @@ public class ExtBackPropigation extends BackPropagation {
 			super.doLearningEpoch(trainingSet);
 		}
 	}
+	public static void helperToWrite(Double d){
+		try {
+//
+			DataOutputStream dos = new DataOutputStream(new FileOutputStream("H:/error.txt",true));
+				String line = d.toString();
+				dos.write(line.getBytes());
+				dos.write('\r');
+				dos.write('\n');
 
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }
