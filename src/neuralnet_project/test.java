@@ -180,7 +180,7 @@ public class test {
                 number_right++;
             }
 
-            System.out.println("     Evaluating... "+(((float)++cur)/((float)test_set.getRows().size())*100)+"%, so far it's looking like "+(((float)number_right)/((float)cur)*100)+"%");
+            System.out.println("     Evaluating.... "+(((float)++cur)/((float)test_set.getRows().size())*100)+"%, so far it's looking like "+(((float)number_right)/((float)cur)*100)+"%");
         }
         return ((float)number_right)/((float)test_set.getRows().size());
     }
